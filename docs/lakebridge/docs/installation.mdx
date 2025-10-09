@@ -93,8 +93,8 @@ confirmation of a successful installation is indicated when the displayed output
 
 Command:
 ```bash
- databricks labs lakebridge --help
- ```
+databricks labs lakebridge --help
+```
 
 Should output:
 ```console
@@ -121,6 +121,8 @@ Global Flags:
   -o, --output type      output type: text or json (default text)
   -p, --profile string   ~/.databrickscfg profile
   -t, --target string    bundle target to use (if applicable)
+
+Use "databricks labs lakebridge [command] --help" for more information about a command.
 ```
 
 [[back to top](#table-of-contents)]
@@ -144,11 +146,11 @@ databricks labs lakebridge install-transpile
 #### Override the default[Bladebridge] config:
 
 There is an option for you to override the default config file that `Lakebridge` uses for converting source code from dialects like `datastage`, `synapse`,
-`orcale` etc. During installtion you may use your own custom config file and `Lakebridge` will override the config with the one you would provide. You can only setup this
+`oracle` etc. During installation you may use your own custom config file and `Lakebridge` will override the config with the one you would provide. You can only setup this
 override during installation.
 
 Specify the config file to override the default[Bladebridge] config during installation:
-```bash
+```
 Specify the config file to override the default[Bladebridge] config - press <enter> for none (default: <none>): <local_full_path>/custom_<source>2databricks.json
 ```
 :::
@@ -158,8 +160,8 @@ Verify the successful installation by executing the provided command; confirmati
 
 Command:
 ```bash
- databricks labs lakebridge transpile --help
- ```
+databricks labs lakebridge transpile --help
+```
 
 Should output:
 ```console
@@ -209,7 +211,7 @@ are running the lakebridge commands and lakebridge would use that warehouse to c
 
 This is how the profile would look like:
 
-```bash
+```console
 [profile-name]
 host         = <your-workspace-url>
 ...
@@ -225,9 +227,9 @@ Command:
  databricks labs lakebridge reconcile --help
  ```
 
- Should output:
- ```console
- Reconcile source and target data residing on Databricks
+Should output:
+```console
+Reconcile source and target data residing on Databricks
 
 Usage:
   databricks labs lakebridge reconcile [flags]
@@ -240,6 +242,6 @@ Global Flags:
   -o, --output type      output type: text or json (default text)
   -p, --profile string   ~/.databrickscfg profile
   -t, --target string    bundle target to use (if applicable)
- ```
+```
 
 [[back to top](#table-of-contents)]
