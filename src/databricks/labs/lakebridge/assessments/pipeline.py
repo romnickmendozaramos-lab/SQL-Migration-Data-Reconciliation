@@ -278,14 +278,13 @@ class PipelineClass:
         logging.info(f"Query for step '{step_name}' returned {row_count} rows.")
 
         with duckdb.connect(self._db_path) as conn:
-            # Check if table exists using information_schema
-            # TODO: SQL injection vulnerability - use parameterized query with ?
+            # Note: step_name is validated to be SQL-safe by Step.__post_init__
             table_exists = self._table_exists(conn, step_name)
             conn.begin()
             if table_exists and mode == 'overwrite':
                 # Table exists and overwrite mode: Truncate then insert within a transaction to preserve existing DDL schema
                 _result_frame = result.to_df()
-                # TODO: SQL injection vulnerability - use quote_identifier(step_name)
+                # Note: step_name is validated to be SQL-safe by Step.__post_init__
                 logging.debug(f"Overwriting existing table '{step_name}'")
                 conn.execute(f"TRUNCATE {step_name}")
                 conn.execute(f"INSERT INTO {step_name} SELECT * FROM _result_frame")
@@ -293,14 +292,14 @@ class PipelineClass:
                 if table_exists:
                     # Table exists and append mode: insert into existing table (DuckDB handles type conversion)
                     _result_frame = result.to_df()
-                    # TODO: SQL injection vulnerability - use quote_identifier(step_name)
+                    # Note: step_name is validated to be SQL-safe by Step.__post_init__
                     statement = f"INSERT INTO {step_name} SELECT * FROM _result_frame"
                     logging.debug(f"Appending to existing table '{step_name}'")
                 else:
                     # Table doesn't exist: create table with native types from query result
                     # Use DDL steps for explicit type control when needed
                     _result_frame = result.to_df()
-                    # TODO: SQL injection vulnerability - use quote_identifier(step_name)
+                    # Note: step_name is validated to be SQL-safe by Step.__post_init__
                     statement = f"CREATE TABLE {step_name} AS SELECT * FROM _result_frame"
                     logging.debug(f"Creating new table '{step_name}' with native types")
 
@@ -313,9 +312,8 @@ class PipelineClass:
 
     @staticmethod
     def _table_exists(conn: duckdb.DuckDBPyConnection, table_name: str) -> bool:
-        # TODO: SQL injection vulnerability - use parameterized query with ?
         result = conn.execute(
-            f"SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{table_name}'"
+            "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = ?", [table_name]
         ).fetchone()
         return result[0] > 0 if result else False
 
